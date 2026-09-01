@@ -1,0 +1,28 @@
+ESPACIO DE TRABAJO Y ORGANIZACIÓN DE PROYECTO DE CIENCIA DE DATOS
+-	Estructura de directorios: mantener una estructura clara e independiente del sistema:
+•	Data/raw/  datos originales e inmutables
+•	Data/processed/  limpios
+Hay que estructurar el proyecto
+Tengo una carpeta raíz (bitácora personal, la del proyecto, la de intro de ciencia de datos)  esto está en github/escritorio
+Dentro de cada carpeta raíz, debo tener:
+•	Data
+•	R/Pyhton/código
+•	Resultados
+Todo esto se ve en Visual Studio o R studio  a todo esto se le llama burbuja, la cuak permite reproducir o clonar
+Rutas
+-	Absolutas: es cuando escribo toda la ruta de acceso. Esto es texto si no estoy usando código. Para poder comprenderlo como una ruta, uso paquetes (librerías) o funciones
+-	Relativas: conozco la raíz (por ejemplo, introducción-ciencia-de-datos)
+Por ejemplo: ruta de la clase
+Absoluta: "C:\Users\sofil\OneDrive\Documents\GitHub\Introduccion-a-la-ciencia-de-datos\clases\clase4"
+Relativa: “clases/clases4”
+Esto es para no depender de donde guarda cada miembro las cosas y acceder directamente a la clase, donde sea que la tenga guardada.
+Es preferible tener rutas relativas y no absolutas
+PYTHON
+Usar el paquete os para las rutas
+Import os
+os.getcwd()  es el equivalente a getwd() en R, es para un chequeo rápido
+Para trabajar con rutas relativas:
+Pip install pathlib
+From pathlib import Path
+R
+Instal.packages(“here”)  para trabajar con rutas relativas
