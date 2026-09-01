@@ -1,0 +1,85 @@
+---
+title: "Clase 4"
+author: "Sofia"
+date: "2026-09-01"
+output: pdf_document
+---
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+library(here)
+library(readr)
+```
+
+1. Construir la ruta relativa hacia el archivo CSV
+
+```{r}
+archivo <- "cantidad_de_residuos_en_la_estacion_de_transferencia_2023.csv"
+ruta_csv <- here("Datos", "Clase 4 - Residuos", archivo)
+ruta_csv
+getwd()
+```
+
+2. Verificar que el archivo exista
+
+```{r}
+if (!file.exists(ruta_csv)) {
+  stop(paste("No se encontró el archivo en:", ruta_csv))
+}
+```
+
+3. Cargar el archivo CSV
+
+```{r}
+df <- read_csv(ruta_csv)
+df
+```
+
+4. Inspección inicial de los datos
+
+```{r}
+cat("--- Archivo cargado exitosamente desde:", basename(ruta_csv), "---\n")
+print(spec(df))  # Muestra el tipo de dato asignado a cada columna
+head(df)
+```
+
+## Data profiling/Inspección de datos/Reconocimiento de datos{.scrollable}
+
+Actividades esenciales:
+
+- Evaluar el tamaño del archivo y las necesidades de procesamiento
+```{r}
+file.size(ruta_csv)/1024
+format(object.size(df), units = "MB")
+```
+
+Esto significa que ocupa 363.96 en el disco y 0.5MB en la memoria
+
+- Evaluar si el caso a analizar está completo con los datos obtenidos: filas (unidades de observación) y columnas (características o variables)
+```{r}
+dim(df)
+range(df$fecha_dia)
+length(unique(df$fecha_dia))
+```
+
+La BD tiene 1222 filas y 41 columnas. Las filas son todas distintas
+Hay datos de todo diciembre (del 1/12 al 30/12) y por eso son 30 datos
+
+- Confirmar el tipo de datos obtenidos
+```{r}
+# Son 3 formas de ver lo mismo, el tipo de dato almacenado en cada columna
+spec(df)
+sapply(df, class)
+str(df) # En clase usamos esta forma, lo que vemos entre "" son algunos valores de esa columna
+```
+
+Hay que identificar la unidad de observación
+Para eso reconozco las filas únicas: el ID de la BD
+```{r}
+#Ejercicio identificar la variable ID
+unique(df$matricula_letra) # Me muestra los valores de los valores únicos, en un vector
+length(unique(df$matricula_letra)) # Me muestra la cantidad de los valores únicos
+sapply(df, function(x) length(unique(x)))
+```
+Vemos que la columna "Pesada" tiene 1222 valores, es decir, que tiene la misma cantidad de valores únicos que filas de la base de datos df.
+Esto implica que "Pesada" es la columna ID
