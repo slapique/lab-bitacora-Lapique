@@ -1,0 +1,42 @@
+---
+title: "Seudocodigo"
+author: "Sofia"
+date: "2026-09-03"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Creo el vector temperaturas
+
+```{r}
+temperaturas <- c(18, 22, 15, 25, 30)
+temperaturas
+```
+## Filtro elementos mayores a 20
+
+Creo un vector vacio
+```{r}
+vector_filtrado <- c()
+```
+
+# Forma 1
+Forma simple creando un vector nuevo
+```{r}
+resultado <- temperaturas[temperaturas > 20]
+resultado
+```
+
+# Forma 2
+Filtro los valores del vector "temperatura" que cumplen > 20
+```{r}
+resultado2 <- c()
+for (elemento in temperaturas) {
+  if (elemento > 20) {
+    resultado2 <- c(resultado2, elemento)
+  }
+}
+resultado2
+```
