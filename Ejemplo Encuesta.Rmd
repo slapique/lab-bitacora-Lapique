@@ -1,0 +1,11 @@
+---
+title: "Ejercicio Encuesta"
+author: "Sofia"
+date: "2026-09-08"
+output: pdf_document
+---
+
+```{r}
+encuesta <- read.csv2("EjemploEncuesta.csv")
+str(encuesta)
+```
