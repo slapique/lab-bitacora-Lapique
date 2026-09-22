@@ -1,0 +1,11 @@
+Exploración
+-	Variables individuales
+•	Densidad
+•	Histograma
+•	Barras
+•	Boxplot (caja)
+-	Variables conjuntas: están relacionadas?
+Series de tiempo
+Rezago: cuando las variables se correlacionan con otra unidad de tiempo.
+Quiero detectar cuanto tiempo demora o permanece en memoria
+R^2 me indica el porcentaje que explica el modelo
