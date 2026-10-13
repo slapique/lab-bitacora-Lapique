@@ -180,8 +180,20 @@ summary(modelo_tc3)
 # coeficiente que se distingue de cero.
 #
 # 1. Crear en tc la variable noche: vale 1 si la franja es "noche" y 0 si no.
+tc <- tc |>
+  mutate(noche = ifelse(franja == "noche", 1, 0))
 # 2. Ajustar modelo_tc5 con transito_miles, pm25 y noche (sin franja).
+modelo_tc5 <- lm(no2 ~ transito_miles + pm25 + noche, data = tc)
 # 3. Mostrar los coeficientes y el R². ¿Cuánto suma la noche?
+summary(modelo_tc5)
+
+# La noche suma el valor del coeficiente "noche": son los µg/m³ de NO2 que
+# tiene de más una hora de noche respecto al resto, a igual tránsito y PM2.5.
+# Comparar el R² con el de modelo_tc4 (0,4861): si es casi igual, agrupar las
+# franjas en una sola binaria no pierde casi nada.
+# R^2 ajustado tc4 = 0.4771
+# R^2 ajustado tc5 = 0.0.4759
+# Agregar la variable binaria empeora el ajuste
 # -----------------------------------------------------------------------------
 
 
@@ -208,18 +220,58 @@ print(g17)
 # modelo_tc6 <- lm(no2 ~ transito_miles * franja, data = tc)
 #
 # 1. Mirar el gráfico: ¿qué franja tiene la recta más empinada?
+# En g17 la recta más empinada es la de la madrugada
+
 # 2. Crear en tc una variable binaria para esa franja (1 si la hora
 #    pertenece a esa franja, 0 si no).
+tc <- tc |>
+  mutate(madrugada = ifelse(franja == "madrugada", 1, 0))
+
 # 3. Ajustar modelo_tc7 con la interacción entre transito_miles y la
 #    variable nueva. Mostrar los coeficientes y el R²
-
+modelo_tc7 <- lm(no2 ~ transito_miles * madrugada, data = tc)
+summary(modelo_tc7)
 # =============================================================================
 # EJERCICIO 7. ¿QUÉ PASA EN LA TARDE?
 # =============================================================================
 # En el gráfico g17 los puntos de la tarde forman dos grupos separados.
 #
 # 1. Crear la tabla tarde con las filas de tc cuya franja es "tarde".
+tarde <- tc |> filter(franja == "tarde")
 # 2. Copiar el código de g17 y cambiarlo para usar la tabla tarde y
 #    colorear por tipo_dia en lugar de franja.
+g20 <- ggplot(tarde, aes(transito_miles, no2, color = tipo_dia)) +
+  geom_point(size = 2.5, alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 1.2) +
+  scale_color_manual(values = c("lunes a viernes" = "#0072B2",
+                                "fin de semana"   = "#E69F00")) +
+  labs(title = "Tránsito y NO2 en Tres Cruces, por la tarde",
+       x = "Miles de vehículos por hora", y = "NO2 (µg/m³)", color = NULL)
+print(g20)
 # 3. ¿Qué son los dos grupos?
+# Los dos grupos son los días de semana y los de fin de semana. Lo esperable
+# es que el fin de semana tenga menos tránsito (cf. 0,78 relativo en Tres
+# Cruces), así que sus puntos quedarían más a la izquierda.
+# 4. Pensar téoricamente o hacerlo en código un nuevo modelo que tenga en cuenta
+# esta caracteristica
+# Teoría: en la tarde el NO2 no depende solo del tránsito, también depende de
+# si es día de semana o fin de semana. Hay dos formas de incorporarlo:
+#   a) Efecto aditivo: dos rectas paralelas (misma pendiente), una más arriba
+#      que la otra. tipo_dia corre la ordenada al origen.
+#   b) Interacción: dos rectas con pendientes distintas, o sea que el tránsito
+#      pesa distinto en cada tipo de día.
+# Mirando g20 se decide cuál es más razonable: si las rectas de cada color
+# son paralelas alcanza con (a); si se cruzan o se abren, hace falta (b).
+
+# a) Aditivo
+modelo_tarde1 <- lm(no2 ~ transito_miles + tipo_dia, data = tarde)
+summary(modelo_tarde1)$r.squared
+
+# b) Con interacción
+modelo_tarde2 <- lm(no2 ~ transito_miles * tipo_dia, data = tarde)
+summary(modelo_tarde2)$r.squared
+
+# Comparación con el modelo que ignora los grupos
+modelo_tarde0 <- lm(no2 ~ transito_miles, data = tarde)
+summary(modelo_tarde0)$r.squared
 # -----------------------------------------------------------------------------
