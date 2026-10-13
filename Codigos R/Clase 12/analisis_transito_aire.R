@@ -457,3 +457,4 @@ cor(tc$residuo[-1], tc$residuo[-nrow(tc)])     # residuo de una hora contra el d
 # Consecuencia: las horas no son observaciones independientes. La recta y el
 #   R² sirven para describir; los errores estándar y p-valores que muestra
 #   summary(modelo_tc) suponen independencia y acá no son válidos.
+
